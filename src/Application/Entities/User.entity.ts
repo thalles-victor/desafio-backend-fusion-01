@@ -1,4 +1,8 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Session } from 'inspector/promises';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { SessionEntity } from './Session.entity';
+
+export type UserUniqueParam = { id: string } | { email: string };
 
 @Entity('users')
 export class UserEntity {
@@ -22,4 +26,7 @@ export class UserEntity {
 
   @Column({ type: 'timestamptz' })
   updated_at: Date;
+
+  @OneToMany(() => SessionEntity, (session) => session.user)
+  sessions: Session[];
 }
