@@ -1,4 +1,7 @@
-import { BadRequestException } from '@nestjs/common';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { PaginationFlexibleType } from 'src/@types';
 
 export function validatePagination(pagination: PaginationFlexibleType) {
@@ -24,4 +27,14 @@ export function validatePagination(pagination: PaginationFlexibleType) {
     take: validTake,
     skip: validSkip,
   };
+}
+
+export function splitKeyAndValue<T>(object: T) {
+  const [key, value] = Object.entries(object)[0];
+
+  if (!key || (!value && value !== 0)) {
+    throw new InternalServerErrorException();
+  }
+
+  return [key, value];
 }
