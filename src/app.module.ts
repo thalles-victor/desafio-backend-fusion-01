@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './Application/Entities/User.entity';
 import { SessionEntity } from './Application/Entities/Session.entity';
+import { AuthModule } from './Application/Domains/Auth/Auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,8 @@ import { SessionEntity } from './Application/Entities/Session.entity';
       synchronize: process.env.STAGE.toUpperCase() === 'DEV' ? true : false,
       entities: [UserEntity, SessionEntity],
     }),
+
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
