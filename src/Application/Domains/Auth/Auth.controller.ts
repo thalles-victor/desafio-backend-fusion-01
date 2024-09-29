@@ -5,6 +5,7 @@ import {
   Get,
   Post,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { SignUpDto } from './dtos/SignUp.dto';
@@ -12,6 +13,8 @@ import { AuthService } from './Auth.service';
 import { Request } from 'express';
 import { SignInDto } from './dtos/SignIn.dto';
 import { JwtAuthGuard } from './Guards/JwtAuth.guard';
+import { JwtPayloadType } from '@types';
+import { PayloadParam } from 'src/Application/Core/Decorators/payload-param.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -47,9 +50,13 @@ export class AuthController {
     });
   }
 
-  @Get('teste')
+  @Get('user')
   @UseGuards(JwtAuthGuard)
-  teste() {
-    return 'accessed';
+  user(@PayloadParam() payload: JwtPayloadType) {
+    if (!payload) {
+      throw new UnauthorizedException();
+    }
+
+    return this.authService.getUserInformation(payload.session_id);
   }
 }

@@ -1,5 +1,10 @@
 import { RepoReferenceInjection } from '@metadata';
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
@@ -118,6 +123,28 @@ export class AuthService {
         created_at: sessionCreated.created_at,
       },
       access_token: token,
+    };
+  }
+
+  async getUserInformation(session_id: string) {
+    const session = await this.sessionRepository.getBy({ id: session_id });
+
+    const user = await this.userRepository.getBy({ id: session.user_id });
+
+    if (!session) {
+      throw new NotFoundException('session not found');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...rest } = user;
+
+    return {
+      user: rest,
+      session: {
+        session_id: session.id,
+        device: session.device,
+        created_at: session.created_at,
+      },
     };
   }
 
