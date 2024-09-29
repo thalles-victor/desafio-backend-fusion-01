@@ -2,13 +2,16 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { SignUpDto } from './dtos/SignUp.dto';
 import { AuthService } from './Auth.service';
 import { Request } from 'express';
 import { SignInDto } from './dtos/SignIn.dto';
+import { JwtAuthGuard } from './Guards/JwtAuth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -42,5 +45,11 @@ export class AuthController {
       device: userAgent,
       ip_address: IPAdress,
     });
+  }
+
+  @Get('teste')
+  @UseGuards(JwtAuthGuard)
+  teste() {
+    return 'accessed';
   }
 }

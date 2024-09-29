@@ -6,6 +6,7 @@ import { RepoReferenceInjection } from '@metadata';
 import { UserTypOrmRepository } from 'src/Infra/Repositories/User/UserTypeOrm.repository';
 import { SessionTypeOrmRepository } from 'src/Infra/Repositories/Session/SessionTypeOrm.repository';
 import { RepositoriesModule } from 'src/Infra/Repositories/Repositories.module';
+import { JwtAuthGuard } from './Guards/JwtAuth.guard';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { RepositoriesModule } from 'src/Infra/Repositories/Repositories.module';
       useClass: SessionTypeOrmRepository,
     },
     AuthService,
+    JwtAuthGuard,
   ],
 })
 export class AuthModule {}
