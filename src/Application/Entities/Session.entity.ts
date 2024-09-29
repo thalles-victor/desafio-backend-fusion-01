@@ -22,4 +22,10 @@ export class SessionEntity {
   @Column('uuid')
   @Index()
   user_id: string;
+
+  @Column({ type: 'varchar' })
+  device: string;
+
+  @Column({ type: 'timestamptz', default: new Date() })
+  created_at: Date;
 }
