@@ -3,10 +3,10 @@ import { AuthService } from './Auth.service';
 import { AuthController } from './Auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { RepoReferenceInjection } from '@metadata';
-import { UserTypOrmRepository } from 'src/Infra/Repositories/User/UserTypeOrm.repository';
-import { SessionTypeOrmRepository } from 'src/Infra/Repositories/Session/SessionTypeOrm.repository';
 import { RepositoriesModule } from 'src/Infra/Repositories/Repositories.module';
 import { JwtAuthGuard } from './Guards/JwtAuth.guard';
+import { SessionInMemoryRepository } from 'src/Infra/Repositories/Session/SessionImMemory.repository';
+import { UserInMemoryRepository } from 'src/Infra/Repositories/User/UserInMemory.repository';
 
 @Module({
   imports: [
@@ -20,11 +20,11 @@ import { JwtAuthGuard } from './Guards/JwtAuth.guard';
   providers: [
     {
       provide: RepoReferenceInjection.USER_REPOSITORY,
-      useClass: UserTypOrmRepository,
+      useClass: UserInMemoryRepository,
     },
     {
       provide: RepoReferenceInjection.SESSION_REPOSITORY,
-      useClass: SessionTypeOrmRepository,
+      useClass: SessionInMemoryRepository,
     },
     AuthService,
     JwtAuthGuard,
