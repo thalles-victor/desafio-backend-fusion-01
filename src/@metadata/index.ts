@@ -1,0 +1,4 @@
+export enum RepoReferenceInjection {
+  USER_REPOSITORY = 'USER_REPOSITORY ',
+  SESSION_REPOSITORY = 'USER_REPOSITORY',
+}
