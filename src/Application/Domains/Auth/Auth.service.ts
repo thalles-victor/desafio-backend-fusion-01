@@ -12,6 +12,11 @@ import { SignUpDto } from './dtos/SignUp.dto';
 import { JwtPayloadType } from '@types';
 import { SignInDto } from './dtos/SignIn.dto';
 
+type ClientInfo = {
+  device: string;
+  ip_address: string;
+};
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -22,7 +27,7 @@ export class AuthService {
     private readonly sessionRepository: ISessionRepositoryContract,
   ) {}
 
-  async signUp(signUpDto: SignUpDto, userAgent: string) {
+  async signUp(signUpDto: SignUpDto, clientInfo: ClientInfo) {
     const emailInUsed = await this.userRepository.getBy({
       email: signUpDto.email,
     });
@@ -45,7 +50,8 @@ export class AuthService {
       id: generateUUID(),
       user: user,
       user_id: user.id,
-      device: userAgent,
+      device: clientInfo.device,
+      ip_address: clientInfo.ip_address,
       created_at: new Date(),
     } as SessionEntity);
 
@@ -62,13 +68,13 @@ export class AuthService {
       session: {
         session_id: sessionCreated.id,
         device: sessionCreated.device,
-        created_at: sessionCreated,
+        created_at: sessionCreated.created_at,
       },
       access_token: token,
     };
   }
 
-  async signIn(signInDto: SignInDto, userAgent: string) {
+  async signIn(signInDto: SignInDto, clientInfo: ClientInfo) {
     const userExist = await this.userRepository.getBy({
       email: signInDto.email,
     });
@@ -94,7 +100,8 @@ export class AuthService {
       user: userExist,
       user_id: userExist.id,
       created_at: new Date(),
-      device: userAgent,
+      device: clientInfo.device,
+      ip_address: clientInfo.ip_address,
     } as SessionEntity);
 
     const sessionCreated = await this.sessionRepository.create(session);

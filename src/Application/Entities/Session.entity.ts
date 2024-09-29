@@ -26,6 +26,9 @@ export class SessionEntity {
   @Column({ type: 'varchar' })
   device: string;
 
+  @Column({ type: 'varchar' })
+  ip_address: string;
+
   @Column({ type: 'timestamptz', default: new Date() })
   created_at: Date;
 }
