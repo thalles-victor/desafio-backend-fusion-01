@@ -1,4 +1,3 @@
-import { RepoReferenceInjection } from '@metadata';
 import {
   Inject,
   Injectable,
@@ -8,6 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
+import { RepoReferenceInjection } from '@const';
 import { generateUUID } from '@utils';
 import { UserEntity } from 'src/Application/Entities/User.entity';
 import { ISessionRepositoryContract } from 'src/Infra/Repositories/Session/ISession.respository-contract';

@@ -1,4 +1,4 @@
-import { RepoReferenceInjection } from '@metadata';
+import { RepoReferenceInjection } from '@const';
 import {
   CanActivate,
   ExecutionContext,

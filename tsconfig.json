@@ -19,7 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@types": ["./src/@types"],
-      "@metadata": ["./src/@metadata"],
+      "@const": ["src/@const"],
       "@utils": ["./src/@utils"],
       "@validators": ["./src/@validators"]
     }

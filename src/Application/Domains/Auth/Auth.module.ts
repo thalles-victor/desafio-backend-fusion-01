@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './Auth.service';
 import { AuthController } from './Auth.controller';
 import { JwtModule } from '@nestjs/jwt';
-import { RepoReferenceInjection } from '@metadata';
+import { RepoReferenceInjection } from '@const';
 import { RepositoriesModule } from 'src/Infra/Repositories/Repositories.module';
 import { JwtAuthGuard } from './Guards/JwtAuth.guard';
 import { SessionInMemoryRepository } from 'src/Infra/Repositories/Session/SessionImMemory.repository';
