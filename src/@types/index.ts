@@ -1,6 +1,5 @@
 export type JwtPayloadType = {
-  id: string;
-  email: string;
+  session_id: string;
   // roles: Array<Role>;
 };
 

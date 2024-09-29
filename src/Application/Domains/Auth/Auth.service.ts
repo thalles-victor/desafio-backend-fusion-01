@@ -9,6 +9,8 @@ import { ISessionRepositoryContract } from 'src/Infra/Repositories/Session/ISess
 import { IUserRepositoryContract } from 'src/Infra/Repositories/User/IUser-repository-contract';
 import { SessionEntity } from 'src/Application/Entities/Session.entity';
 import { SignUpDto } from './dtos/SignUp.dto';
+import { JwtPayloadType } from '@types';
+import { SignInDto } from './dtos/SignIn.dto';
 
 @Injectable()
 export class AuthService {
@@ -48,8 +50,71 @@ export class AuthService {
     } as SessionEntity);
 
     const userCreated = await this.userRepository.create(user);
-    await this.sessionRepository.create(session);
+    const sessionCreated = await this.sessionRepository.create(session);
 
-    return userCreated;
+    const token = await this.createJwtSession({ session_id: session.id });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...rest } = userCreated;
+
+    return {
+      user: rest,
+      session: {
+        session_id: sessionCreated.id,
+        device: sessionCreated.device,
+        created_at: sessionCreated,
+      },
+      access_token: token,
+    };
+  }
+
+  async signIn(signInDto: SignInDto, userAgent: string) {
+    const userExist = await this.userRepository.getBy({
+      email: signInDto.email,
+    });
+
+    if (!userExist) {
+      throw new UnauthorizedException();
+    }
+
+    const passwordMatch = await bcrypt.compare(
+      signInDto.password,
+      userExist.password,
+    );
+
+    if (!passwordMatch) {
+      throw new UnauthorizedException();
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...rest } = userExist;
+
+    const session = Object.assign(new SessionEntity(), {
+      id: generateUUID(),
+      user: userExist,
+      user_id: userExist.id,
+      created_at: new Date(),
+      device: userAgent,
+    } as SessionEntity);
+
+    const sessionCreated = await this.sessionRepository.create(session);
+
+    const token = await this.createJwtSession({
+      session_id: sessionCreated.id,
+    });
+
+    return {
+      user: rest,
+      session: {
+        session_id: sessionCreated.id,
+        device: sessionCreated.device,
+        created_at: sessionCreated.created_at,
+      },
+      access_token: token,
+    };
+  }
+
+  private async createJwtSession(payload: JwtPayloadType) {
+    return this.jwtService.sign(payload);
   }
 }
